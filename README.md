@@ -73,4 +73,4 @@ Locally you can get away with not using an alt label like `Example image` but yo
 
 ## Theme
 
-Uses default Ananke theme.
+Uses [ezhil](https://github.com/vividvilla/ezhil) theme.
