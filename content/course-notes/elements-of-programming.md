@@ -1,7 +1,7 @@
 ---
 title: 'Elements of Programming'
 date: 2019-09-25T21:40:27+02:00
-draft: true
+draft: false
 ---
 
 ## elements in every language
