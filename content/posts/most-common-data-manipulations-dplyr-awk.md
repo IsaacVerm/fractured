@@ -1,5 +1,5 @@
 ---
-title: 'Most common data manipulations implemented in Awk and dplyr'
+title: 'Most common data manipulations implemented in awk and dplyr'
 date: 2019-10-04T14:51:44+02:00
 draft: false
 ---
@@ -41,7 +41,7 @@ I've got no intention to go over all the specifics of each but just want to outl
 
 ### awk
 
-`awk` reads text files line by line. When a line matches one of the patterns, `awk` performs specified actions on that line. `awk`continues to process input lines in this way until it reaches the end of the input files. Each line is split into fields.
+`awk` reads text files line by line. When a line matches one of the patterns, `awk` performs specified actions on that line. `awk` continues to process input lines in this way until it reaches the end of the input files. Each line is split into fields.
 
 ## Setup
 
