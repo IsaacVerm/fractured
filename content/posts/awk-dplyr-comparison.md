@@ -120,3 +120,29 @@ To make things more readable we could give the field index a name with a [variab
 ```
 awk -F, '$offence_type_id~/loitering/' offence_type_id=5 denver-crimes.csv
 ```
+
+## Select
+
+We want to select the OFFENSE_TYPE_ID and the NEIGHBORHOOD_ID to get a quick idea of what neighborhoods have what kind of crime.
+
+### dplyr
+
+```
+offense_type_by_neighborhood <- crimes %>%
+  select(c("OFFENSE_TYPE_ID","NEIGHBORHOOD_ID"))
+```
+
+### awk
+
+To find out what the field indices are we have to slightly adopt the command used above. Instead of `grep NEIGHBORHOOD_ID` at the end, we can use
+`grep 'NEIGHBORHOOD_ID\|OFFENSE_TYPE_ID'`. Note the single quotes and escaping of the |. Selecting the fields is as simple as printing them:
+
+```
+awk -F, '{print $5,$17}' denver-crimes.csv
+```
+
+On a sidenote, it's quite straightforward to combine this with the filtering we did before:
+
+```
+awk -F, '$5~/loitering/ { print $5,$17 }' denver-crimes.csv
+```
