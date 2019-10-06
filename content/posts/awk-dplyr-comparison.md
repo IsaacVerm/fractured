@@ -146,3 +146,37 @@ On a sidenote, it's quite straightforward to combine this with the filtering we 
 ```
 awk -F, '$5~/loitering/ { print $5,$17 }' denver-crimes.csv
 ```
+
+## Mutate
+
+Mutating is adding new fields which are functions of already existing fields. For example in the dataset there is both a FIRST_OCCURRENCE_DATE field and a REPORTED_DATE field. It might be interesting to analyze how much time passes between the occurence of a crime and the moment it's reported. Let's create a new field called TIME_BEFORE_REPORTING (in seconds).
+
+### dplyr
+
+This would be the naive approach:
+
+```
+time_before_reporting <- crimes %>%
+  mutate(TIME_BEFORE_REPORTING = REPORTED_DATE - FIRST_OCCURRENCE_DATE)
+```
+
+However, we'll get an error because you cannot subtract non-numeric arguments. By default the REPORTED_DATE and FIRST_OCCURENCE_DATE are parsed as strings so we have to somehow make it explicit we're dealing with dates and not strings here:
+
+```
+time_before_reporting <- crimes %>%
+  mutate(TIME_BEFORE_REPORTING = parse_date_time(REPORTED_DATE,
+                                                 '%m/%d/%Y %I:%M:%S %p') - parse_date_time(FIRST_OCCURRENCE_DATE,
+                                                                                           '%m/%d/%Y %I:%M:%S %p'))
+```
+
+Don't forget to use `library(lubridate)` since lubridate isn't part of the tidyverse family of packages by default.
+
+### awk
+
+gawk (an extension of awk) has [time functions](https://www.gnu.org/software/gawk/manual/gawk.html#Time-Functions) to make calculations with dates easier. However, the options are still limited. To make things easier it's advisable to install `dateutils` (for example with `brew install dateutils` on Mac).
+
+Then we can simply calculate the difference between dates using
+
+```
+
+```
