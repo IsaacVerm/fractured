@@ -4,8 +4,6 @@ date: 2019-10-04T14:51:44+02:00
 draft: false
 ---
 
-[R cheatsheets](https://rstudio.com/resources/cheatsheets/)
-
 ## Goal of this post
 
 We compare the [most common data manipulations](https://dplyr.tidyverse.org/) between `dplyr` and `awk` in terms of functionality.
