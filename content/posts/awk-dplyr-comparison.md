@@ -23,6 +23,8 @@ As explained perfectly in the dplyr article there are 5 types of common data man
 
 All of these supported by grouping. Each of these explanations is explained more in detail in the relevant section.
 
+Reading the data is out of scope for the comparison.
+
 ## Test data set
 
 Needs to be:
@@ -57,41 +59,64 @@ Benchmarking in R is done by using [tictoc](https://www.jumpingrivers.com/blog/t
 
 ## Setup
 
-### R
-
 Install R and the following packages:
 
 ```
 install.packages("tidyverse")
 ```
 
-## Data manipulations
+`awk` is installed by default.
 
-Reading the data is out of scope for the comparison.
-
-### Filter
+## Filter
 
 Filtering means keeping only some records based on their values. Let's say we're interesting in [loitering](https://www.reddit.com/r/AskAnAmerican/comments/4a9x3l/what_is_loitering_and_why_is_it_illegal/).
 
-#### dplyr
+### dplyr
 
 ```
 loitering <- crimes %>%
   filter(OFFENSE_TYPE_ID == "loitering")
 ```
 
-#### awk
+### awk
 
 [awk](https://www.tim-dennis.com/data/tech/2016/08/09/using-awk-filter-rows.html) offers several options.
 
-We could just use a regular expression and not specify the column. This works quite well if the value we want to filter on is unique among the whole dataset. For example if we filter on 'loitering' there's no way any of the other fields would have a value loitering as well (they're mostly offence codes and geographic data):
+#### without specifying field
+
+We could just use a regular expression and not specify the field. This works quite well if the value we want to filter on is unique among the whole dataset. For example if we filter on 'loitering' it's not quite likely any of the other fields would have a value loitering as well (they're mostly offence codes and geographic data):
 
 ```
 awk -F, '/loitering/' denver-crimes.csv
 ```
 
-If we want to be more specific we could use the [regular expression operator ~](https://www.gnu.org/software/gawk/manual/gawk.html#Regexp-Usage) only on the field containing the OFFENSE_TYPE_ID:
+Notice a normal awk program consists of a series of pattern/action pairs called rules. In the example above only the pattern `/loitering/` is specified. If no action is specified the default action is to [print the entire line](https://www.gnu.org/software/gawk/manual/gawk.html#Very-Simple).
+
+#### field-specific
+
+If we want to be more specific we could use the [regular expression operator ~](https://www.gnu.org/software/gawk/manual/gawk.html#Regexp-Usage) only on the field containing the OFFENSE_TYPE_ID.
+
+First thing do is find out the field index of the OFFENSE_TYPE_ID field. An easy way to this in bash without using awk (I slightly adapted the [example](https://www.biostars.org/p/248049/)):
+
+```
+head -1 denver-crimes.csv | tr ',' '\n' | cat -n | grep "OFFENSE_TYPE_ID"
+```
+
+The command above has 4 steps:
+
+- print the first line containing the field names (`head -1`)
+- translate commas to newlines (`tr ',' '\n'`)
+- print all lines (`cat`) with their line number (`-n`)
+- search the line containing the field we want
+
+The translation from comma to newline is necessary to have multiple lines for `cat`. Since now we know the index of the OFFENSE_TYPE_ID we can be more specific with our regex:
 
 ```
 awk -F, '$5~/loitering/' denver-crimes.csv
+```
+
+To make things more readable we could give the field index a name with a [variable](https://www.gnu.org/software/gawk/manual/gawk.html#Using-Variables). In practice you probably won't do it for throwaway programs.
+
+```
+awk -F, '$offence_type_id~/loitering/' offence_type_id=5 denver-crimes.csv
 ```
