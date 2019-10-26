@@ -1,5 +1,5 @@
 ---
-title: "MPs commission attendances"
+title: 'MPs commission attendances'
 date: 2019-10-26T14:14:40+02:00
 draft: false
 ---
@@ -8,7 +8,7 @@ draft: false
 
 ### Article which inspired this post
 
-I was triggered to write this post because of an [interesting article](https://multimedia.tijd.be/vlaamsparlement/) in *De Tijd* from some years ago which I recently stumbled upon again. [Maarten Lambrechts](<http://www.maartenlambrechts.com/](https://multimedia.tijd.be/vlaamsparlement/)>) investigated which members of the Flemish parliament are industrious and which are... less so. 
+I was triggered to write this post because of an [interesting article](https://multimedia.tijd.be/vlaamsparlement/) in _De Tijd_ from some years ago which I recently stumbled upon again. [Maarten Lambrechts](<http://www.maartenlambrechts.com/](https://multimedia.tijd.be/vlaamsparlement/)>) investigated which members of the Flemish parliament are industrious and which are... less so.
 
 ### Focus on commission attendances
 
@@ -16,7 +16,7 @@ To make this more concrete he looked at the number of initiatives and questions 
 
 ## Why focus on attendances?
 
-Originally I started off thinking to replicate the analysis exactly as it was done in the article in *De Tijd*. I was pleased to see an [accompanying article](http://www.maartenlambrechts.com/2016/10/03/how-i-built-a-scraper-to-measure-activity-of-mps.html) exists explaining the process of making the article. This way I learned the Flemish parliament has its [own API](http://ws.vlpar.be/e/opendata/api) in the spirit of open data. Unfortunately using this API turned out to be harder than expected. 
+Originally I started off thinking to replicate the analysis exactly as it was done in the article in _De Tijd_. I was pleased to see an [accompanying article](http://www.maartenlambrechts.com/2016/10/03/how-i-built-a-scraper-to-measure-activity-of-mps.html) exists explaining the process of making the article. This way I learned the Flemish parliament has its [own API](http://ws.vlpar.be/e/opendata/api) in the spirit of open data. Unfortunately using this API turned out to be harder than expected.
 
 ### Flemish parliament API is hard to use
 
@@ -64,7 +64,6 @@ So sadly there's no straight link between the MP on the one hand and questions a
         },
 ```
 
-
 The MPs responsible for the initiative (Wouter Vanbesien and Björn Rzoska) are mentioned in the title field. This is not always the case so it's impossible to rely on this. In addition, to parse this info would take quite some natural language magic. And even if all this would go well the results would never be totally reliable.
 
 Maarten Lambrechts in the end chose to just scrape the site of the parliament instead of using the API directly. However, I wanted to focus less on data collection and more on analysis in this article. Turning my mind to scraping would have meant doing a lot of (necessary) plumbing which I didn't feel like.
@@ -85,8 +84,9 @@ To do a thorough analysis I needed these data sources:
 
 - the commission meeting attendances
 - a list of commission members
+- election results
 
-A third data source, [election results](https://vlaanderenkiest.be/verkiezingen2019/#/parlement/02000/verkozenen), was used to check if being a productive parliamentarian actually is rewarded by votes.
+The third date source, [election results](https://vlaanderenkiest.be/verkiezingen2019/#/parlement/02000/verkozenen), was used to check if being a productive parliamentarian actually is rewarded by votes.
 
 ### commission meeting attendances
 
@@ -130,7 +130,26 @@ B         | Y
 ...
 ```
 
+### list of commission members
+
+Call is made to `/comm/{commId}` to get all the members in a commission. Acting members are not included.
+
+### election results
+
+In this case I didn't use the API but instead scraped the data like you would using a browser with `puppeteer`.
+
+## Analysis
+
+### Most productive members of parliament
+
+First I have a look at what members of parliaments are the most productive by sorting them according to their presences. We go beyond using just the raw presences but crosscheck with the list of commission members. We only count as absence those absences of members of parliament which had to be present. E.g. if a member of parliament is not part of a commission he's not counted.
+
+An analysis is also made along party lines.
+
+### Correlation productivity and electoral success
+
+I check if good parliamentary work is also rewarded by the voter.
+
 ## Code
 
 Code used in this post can be found on my [GitHub account](https://github.com/IsaacVerm/mps-activity).
-
