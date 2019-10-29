@@ -146,10 +146,36 @@ First I have a look at what members of parliaments are the most productive by so
 
 An analysis is also made along party lines.
 
+First check: most presences correlates somewhat with graph Maarten Lambrechts (although presences is not the same as questions or initiatives but should be somewhat the same names).
+
 ### Correlation productivity and electoral success
 
 I check if good parliamentary work is also rewarded by the voter.
 
+Only half of the members could be assigned a vote because:
+
+- some members of parliament in legislature 2014-2019 didn't run for election in 2019
+- minor difference in spelling
+
+Strategy was to put both names to lowercase so (De Meyer Jos and DE MEYER Jos wouldn't match but de meyer jos would).
+
+There's cleary no positive relation between presences in commissions and votes.
+
+To check: members with no presences still have votes. How do you get no presences?
+
+- politicians like [Guy D'haeseleer](https://www.vlaamsparlement.be/vlaamse-volksvertegenwoordigers/guy-dhaeseleer#taken) only just joined the parliament.
+- were minister in government ([Joke Schauvliege](https://www.vlaamsparlement.be/vlaamse-volksvertegenwoordigers/joke-schauvliege), after [resigning](https://www.nieuwsblad.be/cnt/dmf20190205_04154991)
+- temporary replacements like [Jamila Hamddan Lachkar](https://nl.wikipedia.org/wiki/Jamila_Hamddan_Lachkar)
+- ...
+
+bart somers: incredible long list of [commissions he's part of](https://www.vlaamsparlement.be/vlaamse-volksvertegenwoordigers/bart-somers#parlementair) but barely present
+
+### Improvements
+
+Should have used RMarkdown but didn't know how to integrate with Hugo (baby steps).
+
 ## Code
 
 Code used in this post can be found on my [GitHub account](https://github.com/IsaacVerm/mps-activity).
+
+Functions divided by what they act upon (meetings, presences, ...)
