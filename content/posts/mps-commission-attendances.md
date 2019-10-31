@@ -171,32 +171,31 @@ UF is very low because there's only a single member, Christian Van Eycken, and h
 
 ### Correlation productivity and electoral success
 
-I check if good parliamentary work is also rewarded by the voter.
+Looking at the data on presences is quite interesting in itself but does it mean anything? Is parliamentary work also rewarded by the voter? Election results are publicly available so we can correlate productivity and electoral success. Election results used are those of the 2019 election.
 
-Only half of the members could be assigned a vote because:
+On a sidenote, only half of the members could be assigned a vote because:
 
 - some members of parliament in legislature 2014-2019 didn't run for election in 2019
-- minor difference in spelling
+- names might be spelled differently in different datasets (making joins difficult)
 
-Strategy was to put both names to lowercase so (De Meyer Jos and DE MEYER Jos wouldn't match but de meyer jos would).
+The strategy used was to put names in lowercase. For example "De Meyer Jos" and "DE MEYER Jos" wouldn't match but de meyer jos would.
 
-There's cleary no positive relation between presences in commissions and votes.
+Let's start off with plotting the number of presences against the number of votes. In contrast to the productivity part above where we filtered to keep only those MPs which completed an entire legislature, in this electoral part we keep all MPs.
 
-To check: members with no presences still have votes. How do you get no presences?
+![presences vs votes](/presences-vs-votes.png)
+
+It's hard to see any kind of relationship between presences in commissions and votes. This kind of means this analysis is rather without object. I look at the presences but apparently it has no impact at all on voter behavior.
+
+Still, there are loose ends. For example, you can notice there are a few MPs getting votes without presences. How's that possible? I did some digging and there are different reasons for this:
 
 - politicians like [Guy D'haeseleer](https://www.vlaamsparlement.be/vlaamse-volksvertegenwoordigers/guy-dhaeseleer#taken) only just joined the parliament.
 - were minister in government ([Joke Schauvliege](https://www.vlaamsparlement.be/vlaamse-volksvertegenwoordigers/joke-schauvliege), after [resigning](https://www.nieuwsblad.be/cnt/dmf20190205_04154991)
 - temporary replacements like [Jamila Hamddan Lachkar](https://nl.wikipedia.org/wiki/Jamila_Hamddan_Lachkar)
-- ...
 
-bart somers: incredible long list of [commissions he's part of](https://www.vlaamsparlement.be/vlaamse-volksvertegenwoordigers/bart-somers#parlementair) but barely present
+## Summary
 
-### Improvements
-
-Should have used RMarkdown but didn't know how to integrate with Hugo (baby steps).
+Getting the data was way more difficult than expected (the Flemish parliament API could be made more user-friendly). Regarding the analysis itself, had a good look at which members of parliaments are the most and least productive. But in the end this matters little since voters don't seem to take this into account.
 
 ## Code
 
 Code used in this post can be found on my [GitHub account](https://github.com/IsaacVerm/mps-activity).
-
-Functions divided by what they act upon (meetings, presences, ...)
