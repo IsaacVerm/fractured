@@ -142,11 +142,32 @@ In this case I didn't use the API but instead scraped the data like you would us
 
 ### Most productive members of parliament
 
-First I have a look at what members of parliaments are the most productive by sorting them according to their presences. We go beyond using just the raw presences but crosscheck with the list of commission members. We only count as absence those absences of members of parliament which had to be present. E.g. if a member of parliament is not part of a commission he's not counted.
+First I have a look at what members of parliaments are the most productive by sorting them according to their presences. It goes beyond the raw number of presences in two ways:
 
-An analysis is also made along party lines.
+- only obligatory presences are counted
+- only members who completed the entire legislature (2014-2019) are retained
 
-First check: most presences correlates somewhat with graph Maarten Lambrechts (although presences is not the same as questions or initiatives but should be somewhat the same names).
+Because the official list of commission members is taken into account, only presences of official members of a commission are counted. Let's say politician A is a member of commission X but not Y. In case he goes to a meeting of commission Y this won't be counted as a presence.
+
+Ended up with these 20 most productive members of parliament (with the party they belong to):
+
+![top 20 most presences](/top-20-most-presences.png)
+
+The most active members seem to be CD&V party members (5 CD&V MPs in the top 10 of most active parliamenterians). Nonetheless, the number 1 spot is taken by Bart Caron of Groen with about 600 presences blowing everyone else out of the water.
+
+The same graph but for the least active members (who still were present in the entire legislature) paints a different picture:
+
+![top 20 least presences](/top-20-least-presences.png)
+
+Notice the spike for Hermes Sanctorum (striking name). He left Groen in 2016 over a [disagreement around animal rights](https://www.knack.be/nieuws/belgie/beste-hermes-sanctorum-mijn-sympathie-gaat-niet-uit-naar-je-ideologie-maar-naar-je-rechtlijnigheid/article-opinion-750903.html?cookie_check=1572513133). This messes somewhat with the sorting in descending order.
+
+The MP with the least number of presences is Christian Van Eycken. Beginning of 2016 an [arrest warrant](https://en.wikipedia.org/wiki/Christian_Van_Eyken) was issued against him for murder. Because of procedural reasons he was released and somehow he kept attending commission meetings (I checked!). He was officialy found guilty in September 2019 which is after the end of the last legislature.
+
+Based on the above there seems to be a difference in the number of presences between parties. Let's plot the average number of presences by party:
+
+![average number of presences by party](/avg-presences-by-party.png)
+
+UF is very low because there's only a single member, Christian Van Eycken, and his story has already been explained. What's more striking is the low number of presences by Vlaams Belang. On closer inspection it makes more sense. Turns out there's only a single Vlaams Belang commission member in our dataset ([Chris Janssens](https://www.vlaamsparlement.be/vlaamse-volksvertegenwoordigers/chris-janssens#parlementair)).
 
 ### Correlation productivity and electoral success
 
