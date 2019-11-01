@@ -58,3 +58,65 @@ So here I do the following:
 
 - coerce from time series to tibble using `tk_tbl()`
 - split index in month and year using `separate()`
+
+## Transforming
+
+The dataset contains the temperatures in fahrenheit. Since I'm more used to using the Celsius scale I'd like to convert the value column into two fahrenheit and celsius columns. Converting is as easy as subtracting 32 from the fahrenheit value and multiplying by 5/9. It would have been possible to do this using a function from an external package but that seems overkill for such a simple formula.
+
+```
+addCelsiusColumn <- function(temperatures) {
+  temperatures %>%
+    mutate(celsius = (value - 32) * 5/9) %>%
+    rename(fahrenheit = value)
+}
+```
+
+Next to adding the celsius column it would also be nice to calculate the average value by year. Maybe we can even spot some global warming avant la lettre. It gives us something interesting to plot and also creates an extra dataset which will be interesting to play around with if we start orchestrating in a later post.
+
+```
+summariseAvgTemperatureByYear <- function(temperatures) {
+  temperatures %>%
+    group_by(year) %>%
+    summarise(avgTemperature = mean(celsius))
+}
+```
+
+## Visualising
+
+Since the data are years it makes sense to order them chronologically.
+
+```
+plotAvgTemperaturesByYear <- function(avg_temperatures) {
+  ggplot(data = avg_temperatures,
+         aes(x = year, y = avgTemperature)) +
+    geom_line(group = 1) +
+    labs(title = "average temperature by year in Nottingham (1920-1939)",
+         y = "average temperature")
+}
+```
+
+We specify `group = 1` for the geom_line() function since we want to [connect all observations](https://stackoverflow.com/questions/27082601/ggplot2-line-chart-gives-geom-path-each-group-consist-of-only-one-observation). If not specified `ggplot2` considers each temperature value as a group so it plots nothing.
+
+Note the argument is `avg_temperatures` and not `avg_temperatures_by_year` to avoid namespace collisions between the arguments and the [global environment](http://adv-r.had.co.nz/Environments.html).
+
+The plot looks like this:
+
+![average temperatures by year](/avg_temperatures_by_year.png)
+
+Insert quote US president about global warming...
+
+## Modeling
+
+Thanks to the visualisation we have a pretty good idea of how the average temperature evolved over time. Intuitively you can see the average temperature doesn't seem to change too much (at least it seemed not to in Nottingham from 1920 till 1939). But how can we summarise this in a simple way? Such a way is to use a model. If we calculate the [autocorrelation](https://www.datacamp.com/community/tutorials/autocorrelation-r) (measures if observations are independent or not) we can extract the most important piece of our graphs (is there a trend or not?) and summarise it in a single number.
+
+```
+calculateAutoCorrelation <- function(avg_temperatures) {
+  acf(avg_temperatures$avgTemperature, lag.max = 1, plot = FALSE)$acf[2]
+}
+```
+
+`lag.max` means we want to compare with the observation (in this case year) just before. `acf()` returns [way more than just the raw number](https://www.rdocumentation.org/packages/stats/versions/3.3.1/topics/acf) but we only need the coefficient.
+
+## TO DO
+
+For testing pay attention, lot's of datasets called temperatures but they're all different (sometimes celsius column, sometimes not tidy, ...)
