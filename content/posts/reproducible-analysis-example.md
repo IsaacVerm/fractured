@@ -117,6 +117,10 @@ calculateAutoCorrelation <- function(avg_temperatures) {
 
 `lag.max` means we want to compare with the observation (in this case year) just before. `acf()` returns [way more than just the raw number](https://www.rdocumentation.org/packages/stats/versions/3.3.1/topics/acf) but we only need the coefficient.
 
-## TO DO
+## Reporting
 
-For testing pay attention, lot's of datasets called temperatures but they're all different (sometimes celsius column, sometimes not tidy, ...)
+The reporting part is skipped for now. If I want to create a somewhat half decent report I need more space than available in this post. It's not too bad since the basic building blocks are set up. In a way the reporting is just a layer tying those building blocks together.
+
+## Summary
+
+In just [54 lines of codes](https://github.com/IsaacVerm/reproducible-analysis/blob/fcd62d1b9a13bd44e785fd9cd85c574096c43916/analysis.R) our example is ready to be put to the test. In the next post we'll create some basic tests for our functions.
