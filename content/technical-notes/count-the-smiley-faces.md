@@ -19,7 +19,6 @@ Then loop over all smileys and split/check each of them.
 
 <script src="https://embed.runkit.com" data-element-id="my-element"></script>
 
-<!-- anywhere else on your page -->
 <div id="my-element">function countSmileys(arr) {
     splitSmiley = smiley => smiley.split("")
 
