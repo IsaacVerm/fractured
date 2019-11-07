@@ -17,6 +17,60 @@ The solution seems to need these functions:
 
 Then loop over all smileys and split/check each of them.
 
+<script src="https://embed.runkit.com" data-element-id="my-element"></script>
+
+<!-- anywhere else on your page -->
+<div id="my-element">function countSmileys(arr) {
+    splitSmiley = smiley => smiley.split("")
+
+    checkEyes = splittedSmiley => {
+        validEyes = [':',';']
+        eye = splittedSmiley[0]
+        return validEyes.includes(eye)
+    }
+
+    checkNose = splittedSmiley => {
+        validNoses = ['-', '~']
+        nose = splittedSmiley[1]
+        return validNoses.includes(nose)
+    }
+
+    checkMouth = splittedSmiley => {
+        validMouths = [')','D']
+        mouth = splittedSmiley[splittedSmiley.length - 1]
+        return validMouths.includes(mouth)
+    }
+
+    if (arr.length == 0) {
+        return 0
+    }
+
+    let counterSmileys = 0
+
+    arr.forEach(smiley => {
+        const splittedSmiley = splitSmiley(smiley)
+        const eyesOk = checkEyes(splittedSmiley)
+        const mouthOk = checkMouth(splittedSmiley)
+        let noseOk = true // if no nose it's ok
+
+        if (splittedSmiley.length === 3) {
+            // 3 means eyes, nose and mouth
+            noseOk = checkNose(splittedSmiley)
+        }
+
+        if (eyesOk && noseOk && mouthOk) {
+            counterSmileys += 1
+        }
+    })
+
+    return counterSmileys
+
+}
+
+// test
+const smileys = [';]', ':[', ';*', ':$', ';-D']
+countSmileys(smileys)</div>
+
 ### splitSmiley
 
 ```
