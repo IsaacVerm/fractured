@@ -3,7 +3,6 @@
   {{ partial "header.html" . }}
   <body>
     <div class="container wrapper">
-
       <div class="recent-posts section">
         <h2 class="section-header">
           Posts
@@ -18,6 +17,22 @@
           {{ end }}
         </div>
       </div>
+      <br />
+      <div class="recent-posts section">
+        <h2 class="section-header">
+          Technical notes
+        </h2>
+        <div class="posts">
+          {{ $pages := where .Site.RegularPages "Section" "technical-notes" }}
+          {{ range $pages }}
+          <div class="post">
+            <div class="meta">{{ dateFormat "Jan 2, 2006" .Date }}</div>
+            <a class="title" href="{{ .RelPermalink }}">{{.Title}}</a>
+          </div>
+          {{ end }}
+        </div>
+      </div>
+      <br />
       <div class="recent-posts section">
         <h2 class="section-header">
           Observations
