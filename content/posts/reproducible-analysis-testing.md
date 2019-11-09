@@ -137,4 +137,6 @@ Skipped:  0
 
 Notice running all the tests only took 0.1s. That's a small price to pay for confidence.
 
-Setting up testing in R is not hard using `testthat`. The hard part is staying disciplined to write tests for each function you write. It's so easy to get lost in building without checking but it will bite you in the end. You can make it a habit to [write tests before writing code](https://en.wikipedia.org/wiki/Test-driven_development) to enforce this discpline.
+Setting up testing in R is not hard using `testthat`. The hard part is staying disciplined to write tests for each function you write. It's so easy to get lost in building without checking but it will bite you in the end. You can make it a habit to [write tests before writing code](https://en.wikipedia.org/wiki/Test-driven_development) to enforce this discipline.
+
+Now we covered testing (using `testthat`) and package development (using `devtools`). It's time to move on to properly documenting our code.
