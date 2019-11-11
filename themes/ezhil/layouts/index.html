@@ -33,19 +33,6 @@
         </div>
       </div>
       <br />
-      <div class="recent-posts section">
-        <h2 class="section-header">
-          Observations
-        </h2>
-        <div class="posts">
-          {{ $pages := where .Site.RegularPages "Section" "observations" }}
-          {{ range $pages }}
-          <div class="post">
-            <a class="title" href="{{ .RelPermalink }}">{{ dateFormat "Jan 2, 2006" .Date }}</a>
-          </div>
-          {{ end }}
-        </div>
-      </div>
     </div>
   </body>
 </html>
