@@ -52,13 +52,6 @@ This is the complete analysis in [rmarkdown format](https://github.com/IsaacVerm
 
 ## Generating the vignette
 
-Run `devtools::document`. This also updates the export tags of your functions.
+By knitting the vignette you get the exported analysis file in the format of your choosing. When using RStudio, which is really the most handy IDE for R, the knitting is completely integrated in the IDE:
 
-Important note to myself: you should [export your functions](https://stackoverflow.com/questions/35727645/devtools-build-vignette-cant-find-functions)!
-
-So:
-
-- add an `@export` tag to each function
-- run `devtools::document()` to update the `NAMESPACE`
-
-If not your functions will only be available for interactive use after `devtools::load_all()` but not in the vignette.
+![knit to html](/knit-to-html.png)
