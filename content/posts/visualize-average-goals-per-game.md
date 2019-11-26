@@ -8,7 +8,11 @@ In a [previous analysis](https://rpubs.com/isaacverm/scoresJpl) I made a graph s
 
 ## Parts of the graph
 
-A good place to see what we need to develop is the original [plotting function](https://github.com/IsaacVerm/scoresJpl/blob/master/R/visualize-scores.R) in `ggplot2`. We can see the graph has these elements:
+A good place to see what we need to develop is the original [plotting function](https://github.com/IsaacVerm/scoresJpl/blob/master/R/visualize-scores.R) in `ggplot2`. The graph looks like this:
+
+![ggplot average goals per season](/ggplot-average-goals-per-season.png)
+
+We can see the graph has these elements:
 
 - season on x axis
 - average number of scored goals by game on y axis
@@ -74,11 +78,69 @@ In a sense mission accomplished since these are clearly bars but somewhat underw
 
 - the bars are dripping from the ceiling while they should be rising from the bottom up
 - whitespace to the right side of the graph
+- they're just not white and not filled with any other color
 
-By default the coordinate system starts at (0,0) in the top left corner (add link).
+### Turn the bars upside down
 
-We hardcoded the window size and the x values of the bars.
+By default the [Processing coordinate system](https://processing.org/tutorials/drawing/) has the (0,0) point in the top left corner. In order to fix the issue, we have to base ourselves on the window height. This is what `drawHomeGoals` looks like now:
 
-### Fixing the issues
+```
+void drawHomeGoals(float[] home_goals) {
+  // define as 2 corners instead of corner + width/height
+  rectMode(CORNERS);
 
-### Adding away goal bars
+  // calculate variables needed for calculation corners
+  float bar_width = width / (home_goals.length * 3);
+  float max_home_goals = max(home_goals);
+  float zone_width = 3 * bar_width;
+  float y_margin = 0.1;
+
+  // plot bars
+  for (int i = 0; i < home_goals.length; i++) {
+    float x_corner_one = i * zone_width;
+    float y_corner_one = height * (1 - y_margin);
+    float x_corner_two = i * zone_width + bar_width;
+    float y_corner_two = height - home_goals[i] * (height / ceil(max_home_goals));
+
+    rect(x_corner_one,
+         y_corner_one,
+         x_corner_two,
+         y_corner_two);
+  }
+}
+
+```
+
+A small sketch makes the function easier to understand. In general [sketching on paper is a good idea](https://processing.org/tutorials/anatomy/) to get an idea of where you want to end up.
+
+![sketch average goals per season](/sketch-average-goals-per-season.png)
+
+We define a zone as a combination of 3 elements:
+
+- bar for home goals
+- bar for away goals
+- empty space between bars
+
+In comparison to the original plot the empty space is a bit larger. By default I set it as the width of 1 bar. Also these bars don't start at the edges of the window, but a small margin is provided. Later on the labels and ticks for the x axes will be placed here.
+
+The calculation of the y position of the opposite corner of a bar is the most convoluted part. You have to scale the number of goals somehow. The maximum number of average home goals is a bit less than 2. Translated directly this would mean 2 pixels. This is negligible in a normal window size of for example 500 pixels. That's why we multiply by `height / ceil(max_home_goals)`. Taking the ceiling of the maximum home goals guarantees the bars won't exceed the height of the window.
+
+Changing the `rectMode` to `CORNERS` enables us to draw in other directions than just down. In `rectMode` the first 2 arguments are the x and y position of one corner , the next 2 arguments are the x and y position of the opposite corner.
+
+Note the `size()` function has the side effect of automatically creating `width` and `height` variables. Since a sketch is only valid if the size of the window is defined, we can assume `width` and `height` always to be defined. There's no need to specify them as arguments to the `drawHomeGoals`. Originally I wasn't aware of these `width` and `height` variables so I tried to do something like this:
+
+```
+int window_width = 500;
+int window_height = 500;
+
+void setup() {
+  size(window_width, window_height);
+```
+
+But then you get an error saying Processing could not determine the size of your sketch.
+
+Now the graph looks like this:
+
+![bars bottom up](/bars-bottom-up-average-goals-by-season.png)
+
+The bars are now neatly arranged at the bottom of the screen, but the away goals bars are still missing.
