@@ -242,4 +242,4 @@ int zones_count = goals.getVenueGoalsCount();
 zone = new Zone(zones_count);
 ```
 
-So first I get the attribute of an instance to pass it as an argument for the construction of another object. This workds, but I can't help to think there must be a better way of having these classes work together.
+So first I get the attribute of an instance to pass it as an argument for the construction of another object. This works, but I can't help to think there must be a better way of having these classes work together.
