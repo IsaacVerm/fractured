@@ -81,7 +81,44 @@ So the minimum requirements are:
 
 ## Web app
 
-What's mentioned already in the getting started guide and is clear there is not rehashed here.
+What's mentioned already in the Django getting started guide and is clear there is not rehashed here.
+
+### structure
+
+The following pages exist:
+
+- articles feed (articles_feed)
+  - title
+  - publication date
+- articles sent by mail (articles_sent_by_mail)
+  - title
+  - publication date
+  - sent to who
+- saved articles (articles_saved)
+  - title
+  - publication date
+- article detail (article_detail)
+  - title
+  - description
+  - can save article
+  - can send article by mail
+
+The article detail page can be accessed both from:
+
+- the articles feed
+- articles sent by mail
+- saved articles
+
+The articles saved page can be accessed both from:
+
+- after saving an article
+- main page
+
+From the detail page you can always go to each of those.
+
+You shouldn't be able to save an article already saved. You shouldn't be able to send an article by mail which has already been sent.
+
+Implementing [a form](https://developer.mozilla.org/en-US/docs/Learn/HTML/Forms/Your_first_HTML_form) is a [bit more involved](https://docs.djangoproject.com/en/3.0/intro/tutorial04/).
 
 ### correct field type
 
@@ -136,6 +173,38 @@ There's a solution as well where you add the result of the method as a field in 
 
 [There's no Python code in templates](https://docs.djangoproject.com/en/3.0/ref/templates/language/) although some stuff may have the same name (e.g. `for`).
 
+### while implementing
+
+Put calls to external API (rss feeds in our case) [in views function](https://simpleisbetterthancomplex.com/tutorial/2018/02/03/how-to-use-restful-apis-with-django.html).
+
+`feedparser` doesn't work anymore because of [SSL certification issue](https://stackoverflow.com/questions/28282797/feedparser-parse-ssl-certificate-verify-failed).
+
+Must use `{% csrf_token %}` for [CSRF errors](https://docs.djangoproject.com/en/3.0/intro/tutorial04/).
+
+Use `reverse` not to hardcode urls in templates. Maybe not so important since the app is still small. Make issue in Github.
+
+Proper url management is key.
+
+Use [repath](https://docs.djangoproject.com/en/3.0/topics/http/urls/) to make distinction between `<article_path>` and save.
+
+Issue: reusable functions between views. E.g. clean article_path involved removing `de standaard blabla`.
+
+Working with forms can be made easier by using the [Form](https://docs.djangoproject.com/en/3.0/topics/forms/#the-view) class.
+
+Hack: hidden `input` element prefilled with description data. Probably not the proper way to pass data between contexts and views.
+
+Multiple forms so at least one form is empty results in [multivalue dict key errors](https://stackoverflow.com/questions/5895588/django-multivaluedictkeyerror-error-how-do-i-deal-with-it).
+
+### sending mails
+
+Sending mails itself is [well documented and easy](https://docs.djangoproject.com/en/3.0/topics/email/).
+
+To send mails you have to provide your password. Checking this password in to GitHub is naturally not a good idea since it's there for everyone to see. You can set up [environment variables](https://stackoverflow.com/questions/55640495/django-send-mail-security-password) which are injected at runtime. Environment variables in Python are set [this way](https://djangostars.com/blog/configuring-django-settings-best-practices/).
+
+### css
+
+button as hyperlink is [hard](https://www.w3docs.com/snippets/html/how-to-create-an-html-button-that-acts-like-a-link.html). Played around with `input` from form. Settled for a button in the end.
+
 ## Cypress
 
 Now we've got the mimimum of an app set up, it's time to set up the testing. I chose to have the tests in the same repository as the web app. Figured I can always split it off in a separate repo later on if the need might arise. Also opens possibility of [watching app file changes](https://github.com/bahmutov/cypress-watch-and-reload).
@@ -146,7 +215,23 @@ Data has to be [seeded](https://docs.djangoproject.com/en/2.2/howto/initial-data
 
 ## Travis
 
-Can only test if server is running.
+### notes
+
+We can only test against a running server. At first I tried to have 2 separate jobs:
+
+- a python job running a local version of the web server
+- node job with tests against this local web server
+
+Somehow this worked. I have no idea why the current setup works. Python process serving the Django server should never finish so the Cypress tests shouldn't run in the job just afterwards. But after some time the tests do start to run.
+
+Sadly discovered the node job has access to the local web server. So I moved to a different approach:
+
+- first deploy to Heroku
+- then run tests on Travis against this deployed Heroku version
+
+So there's no longer any need for build matrices, ...
+
+That's why the latest changes are first deployed to Heroku as explained [here](https://docs.travis-ci.com/user/deployment/heroku/).
 
 Travis can only handle [single commands or scripts](https://docs.travis-ci.com/user/deployment/script/).
 
@@ -154,9 +239,11 @@ You can run multiple languages [in the same Travis config](https://stackoverflow
 
 Difference between [build matrix](https://docs.travis-ci.com/user/build-matrix/) and [build stages](https://docs.travis-ci.com/user/build-stages/) is the order. Jobs in the build matrix run in parallel while those in build stages run sequentially.
 
-I have no idea why the current setup works. Python process serving the Django server should never finish so the Cypress tests shouldn't run in the job just afterwards. But after some time the tests do start to run.
-
 Travis still fails, but because it doesn't share the web server between jobs. Didn't find a easy way to make this possible. Maybe best way is to move on to Heroku deployment, deploy the web app to a test environment and just then run the tests.
+
+### pays off fast
+
+Since on every push to Github the tests ran, you immediately get notified if something goes wrong. Even if you think nothing could have gone wrong. Good catch was this commit where I [forgot to add](https://github.com/IsaacVerm/easy-newspapers/commit/7274eb501312c2ba80b6cee2608b5f25377438c5) one of the installed packages to `requirements.txt`. The app broke down and I could immediately handle the issue. If I would have continued developing I wouldn't have noticed anything (since I do have `atoma` locally!). Untangling the mess surely would have taken some time.
 
 ## Heroku
 
@@ -170,6 +257,4 @@ We can't use the default SQLite database on Heroku because it is file-based, and
 
 The Heroku mechanism for handling this situation is to use a database add-on and configure the web application using information from an environment configuration variable, set by the add-on.
 
-Not correct: use `heroku run python ./newspapers/manage.py migrate`. You have to nest into newspapers.
-
-[Github] Django template. First thing to do is reset commits with faulty experiments.
+[Github] Django template.
