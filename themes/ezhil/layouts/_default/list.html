@@ -4,18 +4,16 @@
 
 <body>
 	<div class="container wrapper list">
-		{{ partial "head.html" . }}
-
 		{{ if isset .Data "Term" }}
 			<h1>Entries tagged - "{{ .Data.Term }}"</h1>
 		{{ else }}
-			<h1 class="page-title">Posts</h1>
+			<h1 class="page-title">Observations</h1>
 		{{ end }}
 
 		<ul class="posts">
 			{{- range .Data.Pages -}}
 			<li class="post">
-				<a href="{{ .RelPermalink }}">{{.Title}}</a> <span class="meta">{{ dateFormat "Jan 2, 2006" .Date }}</span>
+				<a href="{{ .RelPermalink }}">{{ dateFormat "Jan 2, 2006" .Date }}</a>
 			</li>
 			{{- end -}}
 		</ul>
