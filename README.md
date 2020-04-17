@@ -74,3 +74,7 @@ Locally you can get away with not using an alt label like `Example image` but yo
 ## Theme
 
 Uses [ezhil](https://github.com/vividvilla/ezhil) theme.
+
+## Reading content on site
+
+In some cases you need to add `index.html` to the filepath to see the content. E.g. `https://isaacverm.github.io/notebook-phrases/phrases/index.html`.
